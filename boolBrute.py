@@ -53,44 +53,44 @@ class boolBrute:
             return int(round((self.lower+self.higher)/2))
 
         # If the result was not in this range
-        def checkResultFalse(self):
-            if not self.foundrange:
-                # if the input range is incorrect, change it.
-                self.rangeindex = self.rangeindex + 1
-                self.setInputRange()
-            else:
-                # We assume that we have checked lower first, check if we have done upper yet
-                if not self.checkedUpperSet:
-                    self.checkedUpperSet = True
-                else: 
-                    # Neither the lower set or upper set match
-                    # Theres been a problem! Fail out, reset then set up a False return in getCurrentRange
-                    self.reset()
-                    self.notFound = True
-                    self.verbosePrint("Didn't find anything in the range of > [lower: {0}, higher: {1}]".format(chr(self.lower), chr(self.higher)))
+        def checkResult(self, resultInput):
+            if resultInput:
+                # If result was in the range
+                if self.singles:
+                    # We have found the correct character, return true to the parent program so they can add to list.
+                    return True
+                else:
+                    if not self.foundrange:
+                        self.foundrange = True
+                    else:
+                        # Set the new upper/lower value
+                        if self.checkedUpperSet:
+                            # It was the top half
+                            self.lower = self.middle
+                            self.middle = self.getMidpoint()
+                        else:
+                            # It we the bottom half
+                            self.higher = self.middle
+                            self.middle = self.getMidpoint()
                     
-        # If the result was in this range
-        def checkResultTrue(self):
-            if self.singles:
-                # We have found the correct character, return true to the parent program so they can add to list.
-                return True
+                        # Reset state 
+                        self.checkedUpperSet = False 
+                return False
             else:
                 if not self.foundrange:
-                    self.foundrange = True
+                    # if the initial input range is incorrect, change it.
+                    self.rangeindex = self.rangeindex + 1
+                    self.setInputRange()
                 else:
-                    # Set the new upper/lower value
-                    if self.checkedUpperSet:
-                        # It was the top half
-                        self.lower = self.middle
-                        self.middle = self.getMidpoint()
-                    else:
-                        # It we the bottom half
-                        self.higher = self.middle
-                        self.middle = self.getMidpoint()
-                
-                    # Reset state 
-                    self.checkedUpperSet = False 
-            return False
+                    # We assume that we have checked lower first, check if we have done upper yet
+                    if not self.checkedUpperSet:
+                        self.checkedUpperSet = True
+                    else: 
+                        # Neither the lower set or upper set match
+                        # Theres been a problem! Fail out, reset then set up a False return in getCurrentRange
+                        self.reset()
+                        self.notFound = True
+                        self.verbosePrint("Didn't find anything in the range of > [lower: {0}, higher: {1}]".format(chr(self.lower), chr(self.higher)))
         
         # Create range syntax for parent program
         def rangeSyntax(self, one, two):
