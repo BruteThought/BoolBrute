@@ -50,7 +50,7 @@ class boolBrute:
 
         # Return the middle character between the character codes of lower/higher
         def getMidpoint(self):
-            return int(round((self.lower+self.higher)/2))
+            return int((self.lower+self.higher)/2)
 
         # If the result was not in this range
         def checkResult(self, resultInput):
